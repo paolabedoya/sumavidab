@@ -1,15 +1,14 @@
 
 export type User = {
-    login?: string
-    pswd?: string
-    name?: string
-    email?: string
-    active?: string
-    activation_code?: string
-    priv_admin?: string
-    idempresa_fk?: number
-    id_user?: number
-    fecha_registro_user?: string
-    id_provincia?: number
-    movil?: string
+    id: string
+    rol: "admin" | "patient" | "professional"
+    job_id: number
+    active: boolean
+    country_id: string
+    region: string
+    gender: "f" | "m"
+    group_id: string
+    lifestyle_id: string
+    createdAt?: Date
+    updatedAt?: Date
 }

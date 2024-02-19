@@ -1,11 +1,11 @@
 // importar express
 import express from 'express'
 import con from './utils/db'
-import { User } from './utils/types'
+import mongoose from 'mongoose'
 import jwt, { Jwt, decode } from 'jsonwebtoken'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import db from './utils/db'
+import mainRouter from './routes'
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
@@ -20,61 +20,16 @@ app.use(cors({
     origin: 'http://localhost:4200'
 }))
 
-// crear rutas POST, GET Y PUT
+// anadir routers externos
+app.use("/api", mainRouter)
 
-app.get("/api/", (req, res) => {
-    return res.send({
-        status: "success",
-        message:"hola esto es la raiz de la api"
-    })
-})
+
+
+
 
 app.post("/api/login", (req: express.Request, res: express.Response) => {
     let { username, password } = req.body
 
-    con.query(`
-        SELECT * FROM sec_users
-        WHERE login = '${username}'
-        AND pswd = '${password}'
-    `, (err: any, result: User[]) => {
-        if (err) throw err
-
-        if(result[0]) {
-            let user = result[0]
-
-            user.id_user
-
-            let token = jwt.sign({
-                id_user: user.id_user,
-                email: user.email,
-                login: user.login,
-                hash: process.env.TOKEN_SECRET
-            }, process.env.TOKEN_SECRET ?? "", {
-                expiresIn: '15s'
-            })
-
-            let refresh_token = jwt.sign({
-                id_user: user.id_user,
-                type: 'refresh',
-                hash: process.env.TOKEN_SECRET
-            }, process.env.TOKEN_SECRET ?? "", {
-                expiresIn: '7d'
-            })
-
-            return res.send({
-                status: "success",
-                message: "Has hecho login correctamente",
-                token: token,
-                refresh_token: refresh_token
-            })
-        } else {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido hacer login, las credenciales no son correctas"
-            })
-        }
-
-    })
 
 })
 
@@ -184,15 +139,14 @@ app.post("/api/refresh_token", (req: express.Request, res: express.Response) => 
 
 })
 
-// comprobar conexion base de datos
-db.connect((err) => {
-    if(err) {
-        console.log("No se ha podido conectar con la  base de datos")
-    } else {
-        // iniciar aplicacion
+mongoose
+    .connect("mongodb+srv://admin:admin@cluster0.d0zjd.mongodb.net/?retryWrites=true&w=majority")
+    .then(() => {
+        console.log("Mongo DB Connected")
         app.listen(4040, () => {
             console.log("Api corriendo en: http://localhost:4040")
         })
-    }
-})
-
+    })
+    .catch((e) => {
+        console.log("Error: ", e)
+    })
