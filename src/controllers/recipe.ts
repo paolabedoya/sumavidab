@@ -58,7 +58,7 @@ const recipeController = {
         }
     },
 
-    updaterecipe: async (req: Request, res: Response) => {
+    updateRecipe: async (req: Request, res: Response) => {
         const { id } = req.params
         const { name, ingredients, steps, image_url } = req.body
 
@@ -94,7 +94,7 @@ const recipeController = {
 
     },
 
-    deleterecipe: async (req: Request, res: Response) => {
+    deleteRecipe: async (req: Request, res: Response) => {
         const { id } = req.params
 
         try {
