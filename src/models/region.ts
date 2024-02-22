@@ -16,6 +16,7 @@ const regionSchema = new Schema({
     },
     updatedAt: {
         type: Date,
+        default: Date.now,
     },
 })
 
