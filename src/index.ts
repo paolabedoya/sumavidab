@@ -17,7 +17,7 @@ let app = express()
 // anadir funcionalidad a express
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:4200'
+    origin: 'http://localhost:5173'
 }))
 
 // anadir routers externos
