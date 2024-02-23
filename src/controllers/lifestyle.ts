@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Lifestyle from '../models/lifestyle'
+import type { Request } from '../utils/types'
+import type { Lifestyle as TLifestyle } from '../utils/types'
 
 const lifestyleController = {
-    getLifestyles: async (req: Request, res: Response) => {
+    getLifestyles: async (_req: Request, res: Response) => {
         try {
             const lifestyles = await Lifestyle.find()
             res.send({
@@ -17,7 +19,7 @@ const lifestyleController = {
         }
     },
 
-    getLifestyle: async (req: Request, res: Response) => {
+    getLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const lifestyle = await Lifestyle.findById(id)
@@ -33,7 +35,7 @@ const lifestyleController = {
         }
     },
 
-    createLifestyle: async (req: Request, res: Response) => {
+    createLifestyle: async (req: Request<TLifestyle>, res: Response) => {
         const { name } = req.body
 
         try {
@@ -55,7 +57,7 @@ const lifestyleController = {
         }
     },
 
-    updateLifestyle: async (req: Request, res: Response) => {
+    updateLifestyle: async (req: Request<TLifestyle, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name } = req.body
 
@@ -89,7 +91,7 @@ const lifestyleController = {
 
     },
 
-    deleteLifestyle: async (req: Request, res: Response) => {
+    deleteLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
