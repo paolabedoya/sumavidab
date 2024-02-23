@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Recipe from '../models/recipe'
+import type { Request } from '../utils/types'
+import type { Recipe as TRecipe } from '../utils/types'
 
 const recipeController = {
-    getRecipes: async (req: Request, res: Response) => {
+    getRecipes: async (_req: Request, res: Response) => {
         try {
             const recipes = await Recipe.find()
             res.send({
@@ -17,7 +19,7 @@ const recipeController = {
         }
     },
 
-    getRecipe: async (req: Request, res: Response) => {
+    getRecipe: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const recipe = await Recipe.findById(id)
@@ -33,7 +35,7 @@ const recipeController = {
         }
     },
 
-    createRecipe: async (req: Request, res: Response) => {
+    createRecipe: async (req: Request<TRecipe>, res: Response) => {
         const { name, ingredients, steps, image_url } = req.body
 
         try {
@@ -58,7 +60,7 @@ const recipeController = {
         }
     },
 
-    updateRecipe: async (req: Request, res: Response) => {
+    updateRecipe: async (req: Request<TRecipe, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name, ingredients, steps, image_url } = req.body
 
@@ -94,7 +96,7 @@ const recipeController = {
 
     },
 
-    deleteRecipe: async (req: Request, res: Response) => {
+    deleteRecipe: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
