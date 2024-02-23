@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Group as TGroup } from '../utils/types'
 
-const groupSchema = new Schema({
+const groupSchema = new Schema<TGroup>({
     name: {
         type: String,
         required: true,

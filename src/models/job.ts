@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Job as TJob } from '../utils/types'
 
-const jobSchema = new Schema({
+const jobSchema = new Schema<TJob>({
     name: {
         type: String,
         required: true,

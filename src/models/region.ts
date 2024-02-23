@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Region as TRegion } from '../utils/types'
 
-const regionSchema = new Schema({
+const regionSchema = new Schema<TRegion>({
     name: {
         type: String,
         required: true,

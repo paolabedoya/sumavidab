@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Lifestyle as TLifestyle } from '../utils/types'
 
-const lifestyleSchema = new Schema({
+const lifestyleSchema = new Schema<TLifestyle>({
     name: {
         type: String,
         required: true,

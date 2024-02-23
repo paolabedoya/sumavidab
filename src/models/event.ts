@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Event as TEvent } from '../utils/types'
 
-const eventSchema = new Schema({
+const eventSchema = new Schema<TEvent>({
     start_date: {
         type: Date,
         required: true,

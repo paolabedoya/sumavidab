@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { User as TUser } from '../utils/types'
 
-const userSchema = new Schema({
+const userSchema = new Schema<TUser>({
     rol: {
         type: String,
         required: true,

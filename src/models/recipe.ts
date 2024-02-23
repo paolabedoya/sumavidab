@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Recipe as TRecipe } from '../utils/types'
 
-const recipeSchema = new Schema({
+const recipeSchema = new Schema<TRecipe>({
     name: {
         type: String,
         required: true,

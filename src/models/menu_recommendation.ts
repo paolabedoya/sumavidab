@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { MenuRecommendation as TMenuRecommendation } from '../utils/types'
 
-const menuRecommendationSchema = new Schema({
+const menuRecommendationSchema = new Schema<TMenuRecommendation>({
     breakfast: {
         type: String,
         required: true,

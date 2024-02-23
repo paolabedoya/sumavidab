@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { MedicalHistory as TMedicalHistory } from '../utils/types'
 
-const medicalHistorySchema = new Schema({
+const medicalHistorySchema = new Schema<TMedicalHistory>({
     patient_id: {
         type: String,
         required: true,
