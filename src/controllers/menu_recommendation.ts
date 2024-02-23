@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import MenuRecommendation from '../models/menu_recommendation'
+import type { Request } from '../utils/types'
+import type { MenuRecommendation as TMenuRecommendation } from '../utils/types'
 
 const menuRecommendationController = {
-    getMenuRecommendations: async (req: Request, res: Response) => {
+    getMenuRecommendations: async (_req: Request, res: Response) => {
         try {
             const menuRecommendations = await MenuRecommendation.find()
             res.send({
@@ -17,7 +19,7 @@ const menuRecommendationController = {
         }
     },
 
-    getMenuRecommendation: async (req: Request, res: Response) => {
+    getMenuRecommendation: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const menuRecommendation = await MenuRecommendation.findById(id)
@@ -33,7 +35,7 @@ const menuRecommendationController = {
         }
     },
 
-    createMenuRecommendation: async (req: Request, res: Response) => {
+    createMenuRecommendation: async (req: Request<TMenuRecommendation>, res: Response) => {
         const { breakfast, brunch, lunch, afternoon_snack, dinner, image_url, professional_id } = req.body
 
         try {
@@ -61,7 +63,7 @@ const menuRecommendationController = {
         }
     },
 
-    updateMenuRecommendation: async (req: Request, res: Response) => {
+    updateMenuRecommendation: async (req: Request<TMenuRecommendation, { id: string }>, res: Response) => {
         const { id } = req.params
         const { breakfast, brunch, lunch, afternoon_snack, dinner, image_url, professional_id } = req.body
 
@@ -101,7 +103,7 @@ const menuRecommendationController = {
 
     },
 
-    deleteMenuRecommendation: async (req: Request, res: Response) => {
+    deleteMenuRecommendation: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
