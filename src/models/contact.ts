@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Contact as TContact } from '../utils/types'
 
-const contactSchema = new Schema({
+const contactSchema = new Schema<TContact>({
     name: {
         type: String,
         required: true,
