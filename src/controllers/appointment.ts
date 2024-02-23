@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import type { Request } from '../utils/types'
 import Appointment from '../models/appointment'
+import type { Appointment as TAppointment } from '../utils/types'
 
 const appointmentController = {
-    getAppointments: async (req: Request, res: Response) => {
+    getAppointments: async (_req: Request, res: Response) => {
         try {
             const appointments = await Appointment.find()
             res.send({
@@ -17,7 +19,7 @@ const appointmentController = {
         }
     },
 
-    getAppointment: async (req: Request, res: Response) => {
+    getAppointment: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const appointment = await Appointment.findById(id)
@@ -33,7 +35,7 @@ const appointmentController = {
         }
     },
 
-    createAppointment: async (req: Request, res: Response) => {
+    createAppointment: async (req: Request<TAppointment, any>, res: Response) => {
         const { type, appointment_id } = req.body
 
         try {
@@ -56,7 +58,7 @@ const appointmentController = {
         }
     },
 
-    updateAppointment: async (req: Request, res: Response) => {
+    updateAppointment: async (req: Request<TAppointment, { id: string }>, res: Response) => {
         const { id } = req.params
         const { type, appointment_id } = req.body
 
@@ -91,7 +93,7 @@ const appointmentController = {
 
     },
 
-    deleteAppointment: async (req: Request, res: Response) => {
+    deleteAppointment: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
