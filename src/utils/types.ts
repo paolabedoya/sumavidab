@@ -1,3 +1,6 @@
+import express from 'express'
+
+// Type definitions for the database
 export type UserRol = "admin" | "patient" | "professional"
 
 export type User = {
@@ -114,4 +117,10 @@ export type Region = {
     name: string
     createdAt?: Date
     updatedAt?: Date
+}
+
+// util types
+export type Request<B = any, P = any> = {
+    body: B
+    params: P
 }
