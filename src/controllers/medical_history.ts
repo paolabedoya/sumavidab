@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import MedicalHistory from '../models/medical_history'
+import type { Request } from '../utils/types'
+import type { MedicalHistory as TMedicalHistory } from '../utils/types'
 
 const medicalHistoryController = {
-    getMedicalHistories: async (req: Request, res: Response) => {
+    getMedicalHistories: async (_req: Request, res: Response) => {
         try {
             const medicalHistories = await MedicalHistory.find()
             res.send({
@@ -17,7 +19,7 @@ const medicalHistoryController = {
         }
     },
 
-    getMedicalHistory: async (req: Request, res: Response) => {
+    getMedicalHistory: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const medicalHistory = await MedicalHistory.findById(id)
@@ -33,7 +35,7 @@ const medicalHistoryController = {
         }
     },
 
-    createMedicalHistory: async (req: Request, res: Response) => {
+    createMedicalHistory: async (req: Request<TMedicalHistory>, res: Response) => {
         const { patient_id, appointment_id } = req.body
 
         try {
@@ -56,7 +58,7 @@ const medicalHistoryController = {
         }
     },
 
-    updateMedicalHistory: async (req: Request, res: Response) => {
+    updateMedicalHistory: async (req: Request<TMedicalHistory, { id: string }>, res: Response) => {
         const { id } = req.params
         const { patient_id, appointment_id } = req.body
 
@@ -91,7 +93,7 @@ const medicalHistoryController = {
 
     },
 
-    deleteMedicalHistory: async (req: Request, res: Response) => {
+    deleteMedicalHistory: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
