@@ -1,8 +1,11 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Event from '../models/event'
+import type { Request } from '../utils/types'
+import type { Event as TEvent } from '../utils/types'
+
 
 const eventController = {
-    getEvents: async (req: Request, res: Response) => {
+    getEvents: async (_req: Request, res: Response) => {
         try {
             const events = await Event.find()
             res.send({
@@ -17,7 +20,7 @@ const eventController = {
         }
     },
 
-    getEvent: async (req: Request, res: Response) => {
+    getEvent: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const event = await Event.findById(id)
@@ -33,7 +36,7 @@ const eventController = {
         }
     },
 
-    createEvent: async (req: Request, res: Response) => {
+    createEvent: async (req: Request<TEvent>, res: Response) => {
         const { start_date, end_date, description, venue_type, worker_id } = req.body
 
         try {
@@ -59,7 +62,7 @@ const eventController = {
         }
     },
 
-    updateEvent: async (req: Request, res: Response) => {
+    updateEvent: async (req: Request<TEvent, { id: string }>, res: Response) => {
         const { id } = req.params
         const { start_date, end_date, description, venue_type, worker_id } = req.body
 
@@ -97,7 +100,7 @@ const eventController = {
 
     },
 
-    deleteEvent: async (req: Request, res: Response) => {
+    deleteEvent: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
