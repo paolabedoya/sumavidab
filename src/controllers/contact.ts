@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import type { Request } from '../utils/types'
+import type { Contact as TContact } from '../utils/types'
 import Contact from '../models/contact'
 
 const contactController = {
-    getContacts: async (req: Request, res: Response) => {
+    getContacts: async (_req: Request, res: Response) => {
         try {
             const contacts = await Contact.find()
             res.send({
@@ -17,7 +19,7 @@ const contactController = {
         }
     },
 
-    getContact: async (req: Request, res: Response) => {
+    getContact: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const contact = await Contact.findById(id)
@@ -33,7 +35,7 @@ const contactController = {
         }
     },
 
-    createContact: async (req: Request, res: Response) => {
+    createContact: async (req: Request<TContact>, res: Response) => {
         const { name, phone, email, message } = req.body
 
         try {
@@ -58,7 +60,7 @@ const contactController = {
         }
     },
 
-    updateContact: async (req: Request, res: Response) => {
+    updateContact: async (req: Request<TContact, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name, email, phone, message } = req.body
 
@@ -95,7 +97,7 @@ const contactController = {
 
     },
 
-    deleteContact: async (req: Request, res: Response) => {
+    deleteContact: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
