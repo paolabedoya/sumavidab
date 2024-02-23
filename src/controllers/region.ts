@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Region from '../models/region'
+import type { Request } from '../utils/types'
+import type { Region as TRegion } from '../utils/types'
 
 const regionController = {
-    getRegions: async (req: Request, res: Response) => {
+    getRegions: async (_req: Request, res: Response) => {
         try {
             const regions = await Region.find()
             res.send({
@@ -17,7 +19,7 @@ const regionController = {
         }
     },
 
-    getRegion: async (req: Request, res: Response) => {
+    getRegion: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const region = await Region.findById(id)
@@ -33,7 +35,7 @@ const regionController = {
         }
     },
 
-    createRegion: async (req: Request, res: Response) => {
+    createRegion: async (req: Request<TRegion>, res: Response) => {
         const { name } = req.body
 
         try {
@@ -53,7 +55,7 @@ const regionController = {
         }
     },
 
-    updateRegion: async (req: Request, res: Response) => {
+    updateRegion: async (req: Request<TRegion, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name } = req.body
 
@@ -85,7 +87,7 @@ const regionController = {
         }
     },
 
-    deleteRegion: async (req: Request, res: Response) => {
+    deleteRegion: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
