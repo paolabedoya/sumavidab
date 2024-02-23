@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Group from '../models/group'
+import type { Request } from '../utils/types'
+import type { Group as TGroup } from '../utils/types'
 
 const groupController = {
-    getGroups: async (req: Request, res: Response) => {
+    getGroups: async (_req: Request, res: Response) => {
         try {
             const groups = await Group.find()
             res.send({
@@ -17,7 +19,7 @@ const groupController = {
         }
     },
 
-    getGroup: async (req: Request, res: Response) => {
+    getGroup: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const group = await Group.findById(id)
@@ -33,7 +35,7 @@ const groupController = {
         }
     },
 
-    createGroup: async (req: Request, res: Response) => {
+    createGroup: async (req: Request<TGroup>, res: Response) => {
         const { name } = req.body
 
         try {
@@ -53,7 +55,7 @@ const groupController = {
         }
     },
 
-    updateGroup: async (req: Request, res: Response) => {
+    updateGroup: async (req: Request<TGroup, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name } = req.body
 
@@ -87,7 +89,7 @@ const groupController = {
 
     },
 
-    deleteGroup: async (req: Request, res: Response) => {
+    deleteGroup: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
