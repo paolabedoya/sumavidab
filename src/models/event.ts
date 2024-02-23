@@ -1,10 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
 const eventSchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     start_date: {
         type: Date,
         required: true,

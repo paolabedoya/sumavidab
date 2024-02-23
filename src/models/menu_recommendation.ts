@@ -1,10 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
 const menuRecommendationSchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     breakfast: {
         type: String,
         required: true,

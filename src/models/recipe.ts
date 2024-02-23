@@ -1,10 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
 const recipeSchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     name: {
         type: String,
         required: true,

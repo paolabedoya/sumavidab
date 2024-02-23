@@ -1,10 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
 const medicalHistorySchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     patient_id: {
         type: String,
         required: true,

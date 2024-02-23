@@ -2,10 +2,6 @@ import mongoose, { Schema } from 'mongoose'
 import type { Appointment as TAppointment } from '../utils/types'
 
 const appointmentSchema = new Schema<TAppointment>({
-    _id: {
-        type: String,
-        required: true,
-    },
     type: {
         type: String,
         required: true,

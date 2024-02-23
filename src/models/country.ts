@@ -1,10 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
+import type { Country as TCountry } from '../utils/types'
 
-const countrySchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-    },
+const countrySchema = new Schema<TCountry>({
     name: {
         type: String,
         required: true,
