@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Country from '../models/country'
+import type { Request } from '../utils/types'
+import type { Country as TCountry } from '../utils/types'
 
 const countryController = {
-    getCountries: async (req: Request, res: Response) => {
+    getCountries: async (_req: Request, res: Response) => {
         try {
             const countries = await Country.find()
             res.send({
@@ -17,7 +19,7 @@ const countryController = {
         }
     },
 
-    getCountry: async (req: Request, res: Response) => {
+    getCountry: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const country = await Country.findById(id)
@@ -33,7 +35,7 @@ const countryController = {
         }
     },
 
-    createCountry: async (req: Request, res: Response) => {
+    createCountry: async (req: Request<TCountry>, res: Response) => {
         const { name } = req.body
 
         try {
@@ -55,7 +57,7 @@ const countryController = {
         }
     },
 
-    updateCountry: async (req: Request, res: Response) => {
+    updateCountry: async (req: Request<TCountry, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name } = req.body
 
@@ -89,7 +91,7 @@ const countryController = {
 
     },
 
-    deleteCountry: async (req: Request, res: Response) => {
+    deleteCountry: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
