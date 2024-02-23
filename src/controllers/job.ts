@@ -1,8 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import Job from '../models/job'
+import type { Request } from '../utils/types'
+import type { Job as TJob } from '../utils/types'
 
 const jobController = {
-    getJobs: async (req: Request, res: Response) => {
+    getJobs: async (_req: Request, res: Response) => {
         try {
             const jobs = await Job.find()
             res.send({
@@ -17,7 +19,7 @@ const jobController = {
         }
     },
 
-    getJob: async (req: Request, res: Response) => {
+    getJob: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const job = await Job.findById(id)
@@ -33,7 +35,7 @@ const jobController = {
         }
     },
 
-    createJob: async (req: Request, res: Response) => {
+    createJob: async (req: Request<TJob>, res: Response) => {
         const { name } = req.body
 
         try {
@@ -53,7 +55,7 @@ const jobController = {
         }
     },
 
-    updateJob: async (req: Request, res: Response) => {
+    updateJob: async (req: Request<TJob, { id: string }>, res: Response) => {
         const { id } = req.params
         const { name } = req.body
 
@@ -87,7 +89,7 @@ const jobController = {
 
     },
 
-    deleteJob: async (req: Request, res: Response) => {
+    deleteJob: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
