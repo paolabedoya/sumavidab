@@ -1,8 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import User from '../models/user'
+import type { Request, User as TUser } from '../utils/types'
 
 const userController = {
-    getUsers: async (req: Request, res: Response) => {
+    getUsers: async (_req: Request, res: Response) => {
         try {
             const users = await User.find()
             res.send({
@@ -17,7 +18,7 @@ const userController = {
         }
     },
 
-    getUser: async (req: Request, res: Response) => {
+    getUser: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const user = await User.findById(id)
@@ -33,7 +34,7 @@ const userController = {
         }
     },
 
-    createUser: async (req: Request, res: Response) => {
+    createUser: async (req: Request<TUser>, res: Response) => {
         const { rol, job_id, active, country_id, region, gender, group_id, lifestyle_id, events } = req.body
 
         try {
@@ -63,7 +64,7 @@ const userController = {
         }
     },
 
-    updateUser: async (req: Request, res: Response) => {
+    updateUser: async (req: Request<TUser, { id: string }>, res: Response) => {
         const { id } = req.params
         const { rol, job_id, active, country_id, region, gender, group_id, lifestyle_id, events } = req.body
 
@@ -104,7 +105,7 @@ const userController = {
 
     },
 
-    deleteUser: async (req: Request, res: Response) => {
+    deleteUser: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
