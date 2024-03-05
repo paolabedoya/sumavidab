@@ -1,5 +1,3 @@
-import express from 'express'
-
 // Type definitions for the database
 export type UserRol = "admin" | "patient" | "professional"
 

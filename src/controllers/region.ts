@@ -19,7 +19,7 @@ const regionController = {
         }
     },
 
-    getRegion: async (req: Request<any, { id: string }>, res: Response) => {
+    getRegion: async (req: Request<unknown, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
             const region = await Region.findById(id)

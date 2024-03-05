@@ -105,7 +105,7 @@ const userController = {
 
     },
 
-    deleteUser: async (req: Request<any, { id: string }>, res: Response) => {
+    deleteUser: async (req: Request<unknown, { id: string }>, res: Response) => {
         const { id } = req.params
 
         try {
