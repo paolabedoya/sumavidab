@@ -20,15 +20,25 @@ app.use(cors({
 
 // anadir routers externos
 app.use("/api", mainRouter)
+app.use("/api/test", (req, res) => {
+    return res.json({ message: "Hello world" })
+})
 
-mongoose
-    .connect(process.env.DB_URL ?? "")
-    .then(() => {
-        console.log("Mongo DB Connected")
-        app.listen(4040, () => {
-            console.log("Api corriendo en: http://localhost:4040")
-        })
-    })
-    .catch((e) => {
-        console.log("Error: ", e)
-    })
+console.log('Connecting to DB: ', process.env.DB_URL)
+// mongoose
+//    .connect(process.env.DB_URL ?? "")
+    // .then(() => {
+        // console.log("Mongo DB Connected")
+    // })
+    // .catch((e) => {
+        // console.error("DB Connection error...")
+        // console.error(e.toString())
+    // })
+
+app.listen(4040, () => {
+    console.log("=======================================")
+    console.log("=======================================")
+    console.log("Api corriendo en: http://localhost:4040")
+    console.log("=======================================")
+    console.log("=======================================")
+})
