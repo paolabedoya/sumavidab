@@ -7,6 +7,9 @@
     "start": "tsc && node build/index.js",
     "dev": "nodemon src/index.ts"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
