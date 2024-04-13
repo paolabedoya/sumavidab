@@ -23,7 +23,6 @@ app.use("/api/test", (req, res) => {
     return res.json({ message: "Hello world" })
 })
 
-console.log('hola mundo!!')
 mongoose
   .connect(process.env.DB_URL ?? "")
      .then(() => {
