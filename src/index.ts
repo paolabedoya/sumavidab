@@ -2,12 +2,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import mainRouter from './routes'
-
-if (process.env.NODE_ENV !== 'production') {
-    dotenv.config()
-}
+import morgan from 'morgan'
 
 // crear aplicacion de express
 let app = express()
@@ -18,12 +14,16 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }))
 
+// Anadir logger (morgan)
+app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'))
+
 // anadir routers externos
 app.use("/api", mainRouter)
 app.use("/api/test", (req, res) => {
     return res.json({ message: "Hello world" })
 })
 
+console.log('hola mundo!!')
 mongoose
   .connect(process.env.DB_URL ?? "")
      .then(() => {
