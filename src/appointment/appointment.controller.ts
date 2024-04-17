@@ -1,12 +1,13 @@
 import { Response } from 'express'
 import type { Request } from '../utils/types'
-import Appointment from '../models/appointment'
+import Appointment from './appointment.model'
 import type { Appointment as TAppointment } from '../utils/types'
+import AppointmentService from './appointment.service'
 
-const appointmentController = {
+const AppointmentController = {
     getAppointments: async (_req: Request, res: Response) => {
         try {
-            const appointments = await Appointment.find()
+            const appointments = await AppointmentService.getAllAppointments()
             res.send({
                 status: "success",
                 appointments
@@ -22,7 +23,7 @@ const appointmentController = {
     getAppointment: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const appointment = await Appointment.findById(id)
+            const appointment = await AppointmentService.getAppointmentById(id)
             res.send({
                 status: "success",
                 appointment
@@ -39,16 +40,10 @@ const appointmentController = {
         const { type, appointment_id } = req.body
 
         try {
-            const newAppointment = new Appointment({
-                type,
-                appointment_id
-            })
-
-            const resultDocument = await newAppointment.save()
-
+            const appointment = await AppointmentService.createAppointment({ type, appointment_id })
             res.send({
                 status: "success",
-                appointment: resultDocument
+                appointment
             })
         } catch(err) {
             return res.send({
@@ -64,7 +59,7 @@ const appointmentController = {
 
         try {
 
-            const appointment = await Appointment.findById(id)
+            const appointment = await AppointmentService.updateAppointment({ _id: id, type, appointment_id})
 
             if (!appointment) {
                 return res.send({
@@ -73,15 +68,9 @@ const appointmentController = {
                 })
             }
 
-            appointment.type = type
-            appointment.appointment_id = appointment_id
-            appointment.updatedAt = new Date()
-
-            const resultDocument = await appointment.save()
-
             res.send({
                 status: "success",
-                appointment: resultDocument
+                appointment
             })
 
         } catch(err) {
@@ -98,7 +87,7 @@ const appointmentController = {
 
         try {
 
-            const appointment = await Appointment.findOneAndDelete({ _id: id })
+            const appointment = await AppointmentService.deleteAppointment(id)
 
             if (!appointment) {
                 return res.send({
@@ -106,7 +95,6 @@ const appointmentController = {
                     message: "No se ha encontrado el appointment"
                 })
             }
-
             return res.send({
                 status: "success",
                 appointment
@@ -122,4 +110,4 @@ const appointmentController = {
     },
 }
 
-export default appointmentController
+export default AppointmentController

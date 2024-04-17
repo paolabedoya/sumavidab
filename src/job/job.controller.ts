@@ -1,12 +1,12 @@
 import { Response } from 'express'
-import Job from '../models/job'
-import type { Request } from '../utils/types'
+import JobService from './job.service'
 import type { Job as TJob } from '../utils/types'
+import type { Request } from '../utils/types'
 
-const jobController = {
+const JobController = {
     getJobs: async (_req: Request, res: Response) => {
         try {
-            const jobs = await Job.find()
+            const jobs = await JobService.getAllJobs()
             res.send({
                 status: "success",
                 jobs
@@ -22,7 +22,7 @@ const jobController = {
     getJob: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const job = await Job.findById(id)
+            const job = JobService.getJobById(id)
             res.send({
                 status: "success",
                 job
@@ -39,13 +39,10 @@ const jobController = {
         const { name } = req.body
 
         try {
-            const newJob = new Job({ name })
-
-            const resultDocument = await newJob.save()
-
+            const job = await JobService.createJob({ name })
             res.send({
                 status: "success",
-                job: resultDocument
+                job
             })
         } catch(err) {
             return res.send({
@@ -60,8 +57,7 @@ const jobController = {
         const { name } = req.body
 
         try {
-
-            const job = await Job.findById(id)
+            const job = await JobService.updateJob({ id, name })
 
             if (!job) {
                 return res.send({
@@ -70,14 +66,9 @@ const jobController = {
                 })
             }
 
-            job.name = name
-            job.updatedAt = new Date()
-
-            const resultDocument = await job.save()
-
             res.send({
                 status: "success",
-                job: resultDocument
+                job
             })
 
         } catch(err) {
@@ -93,9 +84,7 @@ const jobController = {
         const { id } = req.params
 
         try {
-
-            const job = await Job.findOneAndDelete({ _id: id })
-
+            const job = await JobService.deleteJob(id)
             if (!job) {
                 return res.send({
                     status: "failed",
@@ -107,7 +96,6 @@ const jobController = {
                 status: "success",
                 job
             })
-
         } catch(err) {
             return res.send({
                 status: "failed",
@@ -118,4 +106,4 @@ const jobController = {
     },
 }
 
-export default jobController
+export default JobController

@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import mainRouter from './routes'
 import morgan from 'morgan'
+import router from './router'
 
 // crear aplicacion de express
 let app = express()
@@ -18,10 +19,7 @@ app.use(cors({
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'))
 
 // anadir routers externos
-app.use("/api", mainRouter)
-app.use("/api/test", (req, res) => {
-    return res.json({ message: "Hello world" })
-})
+app.use("/api", router)
 
 mongoose
   .connect(process.env.DB_URL ?? "")

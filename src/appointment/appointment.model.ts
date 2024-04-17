@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { Appointment as TAppointment } from '../utils/types'
 
-const appointmentSchema = new Schema<TAppointment>({
+const AppointmentSchema = new Schema<TAppointment>({
     type: {
         type: String,
         required: true,
@@ -21,4 +21,4 @@ const appointmentSchema = new Schema<TAppointment>({
     },
 })
 
-export default mongoose.model('Appointment', appointmentSchema)
+export default mongoose.model('Appointment', AppointmentSchema)

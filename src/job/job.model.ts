@@ -1,10 +1,11 @@
 import mongoose, { Schema } from 'mongoose'
-import type { Region as TRegion } from '../utils/types'
+import type { Job as TJob } from '../utils/types'
 
-const regionSchema = new Schema<TRegion>({
+const JobSchema = new Schema<TJob>({
     name: {
         type: String,
         required: true,
+        enum: ["nutricionist", "psychologist", "trainer"]
     },
     createdAt: {
         type: Date,
@@ -13,8 +14,7 @@ const regionSchema = new Schema<TRegion>({
     },
     updatedAt: {
         type: Date,
-        default: Date.now,
     },
 })
 
-export default mongoose.model('Region', regionSchema)
+export default mongoose.model('Job', JobSchema)

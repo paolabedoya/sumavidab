@@ -1,12 +1,13 @@
 import { Response } from 'express'
-import Region from '../models/region'
+import Region from './region.model'
 import type { Request } from '../utils/types'
 import type { Region as TRegion } from '../utils/types'
+import RegionService from './region.service'
 
-const regionController = {
+const RegionController = {
     getRegions: async (_req: Request, res: Response) => {
         try {
-            const regions = await Region.find()
+            const regions = await RegionService.getAllRegions()
             res.send({
                 status: "success",
                 regions
@@ -22,7 +23,7 @@ const regionController = {
     getRegion: async (req: Request<unknown, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const region = await Region.findById(id)
+            const region = await RegionService.getRegionById({ id })
             res.send({
                 status: "success",
                 region
@@ -60,7 +61,7 @@ const regionController = {
         const { name } = req.body
 
         try {
-            const region = await Region.findById(id)
+            const region = await RegionService.updateRegion({ id, name })
 
             if (!region) {
                 return res.send({
@@ -68,17 +69,10 @@ const regionController = {
                     message: "No se ha encontrado el region"
                 })
             }
-
-            region.name = name
-            region.updatedAt = new Date()
-
-            const resultDocument = await region.save()
-
             res.send({
                 status: "success",
-                region: resultDocument
+                region
             })
-
         } catch(err) {
             return res.send({
                 status: "failed",
@@ -91,7 +85,7 @@ const regionController = {
         const { id } = req.params
 
         try {
-            const region = await Region.findOneAndDelete({ _id: id })
+            const region = await RegionService.deleteRegion(id)
 
             if (!region) {
                 return res.send({
@@ -99,20 +93,17 @@ const regionController = {
                     message: "No se ha encontrado el region"
                 })
             }
-
             return res.send({
                 status: "success",
                 region
             })
-
         } catch(err) {
             return res.send({
                 status: "failed",
                 message: "No se ha podido eliminar el region"
             })
         }
-
     },
 }
 
-export default regionController
+export default RegionController
