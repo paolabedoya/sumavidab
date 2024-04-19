@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { Country as TCountry } from '../utils/types'
 
-const countrySchema = new Schema<TCountry>({
+const CountrySchema = new Schema<TCountry>({
     name: {
         type: String,
         required: true,
@@ -16,4 +16,4 @@ const countrySchema = new Schema<TCountry>({
     },
 })
 
-export default mongoose.model('Country', countrySchema)
+export default mongoose.model('Country', CountrySchema)

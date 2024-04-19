@@ -3,10 +3,10 @@ import JobController from './job.controller'
 
 const JobRouter = Router()
 
-JobRouter.get("/router/", JobController.getJobs)
-JobRouter.get("/router/:id", JobController.getJob)
-JobRouter.post("/router", JobController.createJob)
-JobRouter.put("/router/:id", JobController.updateJob)
-JobRouter.delete("/router/:id", JobController.deleteJob)
+JobRouter.get("/job/", JobController.getJobs)
+JobRouter.get("/job/:id", JobController.getJob)
+JobRouter.post("/job", JobController.createJob)
+JobRouter.put("/job/:id", JobController.updateJob)
+JobRouter.delete("/job/:id", JobController.deleteJob)
 
 export default JobRouter

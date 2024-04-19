@@ -1,12 +1,12 @@
 import { Response } from 'express'
-import Country from '../models/country'
 import type { Request } from '../utils/types'
 import type { Country as TCountry } from '../utils/types'
+import CountryService from './country.service'
 
-const countryController = {
+const CountryController = {
     getCountries: async (_req: Request, res: Response) => {
         try {
-            const countries = await Country.find()
+            const countries = await CountryService.getAllCountries()
             res.send({
                 status: "success",
                 countries
@@ -22,7 +22,7 @@ const countryController = {
     getCountry: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const country = await Country.findById(id)
+            const country = await CountryService.getCountryById(id)
             res.send({
                 status: "success",
                 country
@@ -39,15 +39,11 @@ const countryController = {
         const { name } = req.body
 
         try {
-            const newCountry = new Country({
-                name
-            })
-
-            const resultDocument = await newCountry.save()
+            const country = await CountryService.createCountry({ name })
 
             res.send({
                 status: "success",
-                country: resultDocument
+                country
             })
         } catch(err) {
             return res.send({
@@ -63,7 +59,7 @@ const countryController = {
 
         try {
 
-            const country = await Country.findById(id)
+            const country = await CountryService.updateCountry({ id, name })
 
             if (!country) {
                 return res.send({
@@ -72,14 +68,9 @@ const countryController = {
                 })
             }
 
-            country.name = name
-            country.updatedAt = new Date()
-
-            const resultDocument = await country.save()
-
             res.send({
                 status: "success",
-                country: resultDocument
+                country
             })
 
         } catch(err) {
@@ -95,8 +86,7 @@ const countryController = {
         const { id } = req.params
 
         try {
-
-            const country = await Country.findOneAndDelete({ _id: id })
+            const country = await CountryService.deleteCountry(id)
 
             if (!country) {
                 return res.send({
@@ -120,4 +110,4 @@ const countryController = {
     },
 }
 
-export default countryController
+export default CountryController
