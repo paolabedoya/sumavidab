@@ -1,12 +1,13 @@
 import { Response } from 'express'
-import Group from '../models/group'
+import Group from './group.model'
 import type { Request } from '../utils/types'
 import type { Group as TGroup } from '../utils/types'
+import GroupService from './group.service'
 
-const groupController = {
+const GroupController = {
     getGroups: async (_req: Request, res: Response) => {
         try {
-            const groups = await Group.find()
+            const groups = await GroupService.getAllGroups()
             res.send({
                 status: "success",
                 groups
@@ -22,7 +23,7 @@ const groupController = {
     getGroup: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const group = await Group.findById(id)
+            const group = await GroupService.getGroupById({ _id: id })
             res.send({
                 status: "success",
                 group
@@ -39,13 +40,10 @@ const groupController = {
         const { name } = req.body
 
         try {
-            const newGroup = new Group({ name })
-
-            const resultDocument = await newGroup.save()
-
+            const group = await GroupService.createGroup({ name })
             res.send({
                 status: "success",
-                group: resultDocument
+                group
             })
         } catch(err) {
             return res.send({
@@ -60,8 +58,7 @@ const groupController = {
         const { name } = req.body
 
         try {
-
-            const group = await Group.findById(id)
+            const group = await GroupService.updateGroup({ _id: id, name })
 
             if (!group) {
                 return res.send({
@@ -70,14 +67,9 @@ const groupController = {
                 })
             }
 
-            group.name = name
-            group.updatedAt = new Date()
-
-            const resultDocument = await group.save()
-
             res.send({
                 status: "success",
-                group: resultDocument
+                group
             })
 
         } catch(err) {
@@ -94,7 +86,7 @@ const groupController = {
 
         try {
 
-            const group = await Group.findOneAndDelete({ _id: id })
+            const group = await GroupService.deleteGroup(id)
 
             if (!group) {
                 return res.send({
@@ -118,4 +110,4 @@ const groupController = {
     },
 }
 
-export default groupController
+export default GroupController

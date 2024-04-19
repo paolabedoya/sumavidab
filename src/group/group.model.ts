@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { Group as TGroup } from '../utils/types'
 
-const groupSchema = new Schema<TGroup>({
+const GroupSchema = new Schema<TGroup>({
     name: {
         type: String,
         required: true,
@@ -16,4 +16,4 @@ const groupSchema = new Schema<TGroup>({
     },
 })
 
-export default mongoose.model('Group', groupSchema)
+export default mongoose.model('Group', GroupSchema)
