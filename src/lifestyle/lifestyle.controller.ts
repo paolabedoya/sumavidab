@@ -1,12 +1,13 @@
 import { Response } from 'express'
-import Lifestyle from '../models/lifestyle'
+import Lifestyle from './lifestyle.model'
 import type { Request } from '../utils/types'
 import type { Lifestyle as TLifestyle } from '../utils/types'
+import LifestyleService from './lifestyle.service'
 
-const lifestyleController = {
+const LifestyleController = {
     getLifestyles: async (_req: Request, res: Response) => {
         try {
-            const lifestyles = await Lifestyle.find()
+            const lifestyles = await LifestyleService.getAllLifestyles()
             res.send({
                 status: "success",
                 lifestyles
@@ -22,7 +23,7 @@ const lifestyleController = {
     getLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const lifestyle = await Lifestyle.findById(id)
+            const lifestyle = await LifestyleService.getLifestyleById(id)
             res.send({
                 status: "success",
                 lifestyle
@@ -39,15 +40,10 @@ const lifestyleController = {
         const { name } = req.body
 
         try {
-            const newLifestyle = new Lifestyle({
-                name
-            })
-
-            const resultDocument = await newLifestyle.save()
-
+            const lifestyle = await LifestyleService.createLifestyle({ name })
             res.send({
                 status: "success",
-                lifestyle: resultDocument
+                lifestyle
             })
         } catch(err) {
             return res.send({
@@ -63,7 +59,7 @@ const lifestyleController = {
 
         try {
 
-            const lifestyle = await Lifestyle.findById(id)
+            const lifestyle = await LifestyleService.updateLifestyle({ id, name })
 
             if (!lifestyle) {
                 return res.send({
@@ -72,14 +68,9 @@ const lifestyleController = {
                 })
             }
 
-            lifestyle.name = name
-            lifestyle.updatedAt = new Date()
-
-            const resultDocument = await lifestyle.save()
-
             res.send({
                 status: "success",
-                lifestyle: resultDocument
+                lifestyle
             })
 
         } catch(err) {
@@ -95,8 +86,7 @@ const lifestyleController = {
         const { id } = req.params
 
         try {
-
-            const lifestyle = await Lifestyle.findOneAndDelete({ _id: id })
+            const lifestyle = await LifestyleService.deleteLifestyle(id)
 
             if (!lifestyle) {
                 return res.send({
@@ -120,4 +110,4 @@ const lifestyleController = {
     },
 }
 
-export default lifestyleController
+export default LifestyleController
