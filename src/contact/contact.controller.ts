@@ -1,12 +1,13 @@
 import { Response } from 'express'
 import type { Request } from '../utils/types'
 import type { Contact as TContact } from '../utils/types'
-import Contact from '../models/contact'
+import Contact from './contact.model'
+import ContactService from './contact.service'
 
 const contactController = {
     getContacts: async (_req: Request, res: Response) => {
         try {
-            const contacts = await Contact.find()
+            const contacts = await ContactService.getAllContacts()
             res.send({
                 status: "success",
                 contacts
@@ -22,7 +23,7 @@ const contactController = {
     getContact: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const contact = await Contact.findById(id)
+            const contact = await ContactService.getContactById(id)
             res.send({
                 status: "success",
                 contact
@@ -36,21 +37,12 @@ const contactController = {
     },
 
     createContact: async (req: Request<TContact>, res: Response) => {
-        const { name, phone, email, message } = req.body
-
         try {
-            const newContact = new Contact({
-                name,
-                phone,
-                email,
-                message
-            })
-
-            const resultDocument = await newContact.save()
+            const contact = await ContactService.createContact({ ...req.body })
 
             res.send({
                 status: "success",
-                contact: resultDocument
+                contact
             })
         } catch(err) {
             return res.send({
@@ -61,12 +53,9 @@ const contactController = {
     },
 
     updateContact: async (req: Request<TContact, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name, email, phone, message } = req.body
-
         try {
 
-            const contact = await Contact.findById(id)
+            const contact = await ContactService.updateContact({ _id: req.params.id, req.body })
 
             if (!contact) {
                 return res.send({
@@ -75,17 +64,9 @@ const contactController = {
                 })
             }
 
-            contact.name = name
-            contact.email = email
-            contact.phone = phone
-            contact.message = message
-            contact.updatedAt = new Date()
-
-            const resultDocument = await contact.save()
-
             res.send({
                 status: "success",
-                contact: resultDocument
+                contact
             })
 
         } catch(err) {
@@ -98,11 +79,9 @@ const contactController = {
     },
 
     deleteContact: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-
         try {
 
-            const contact = await Contact.findOneAndDelete({ _id: id })
+            const contact = await ContactService.deleteContact(req.params.id)
 
             if (!contact) {
                 return res.send({

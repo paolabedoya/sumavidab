@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { Contact as TContact } from '../utils/types'
 
-const contactSchema = new Schema<TContact>({
+const ContactSchema = new Schema<TContact>({
     name: {
         type: String,
         required: true,
@@ -29,4 +29,4 @@ const contactSchema = new Schema<TContact>({
     },
 })
 
-export default mongoose.model('Contact', contactSchema)
+export default mongoose.model('Contact', ContactSchema)

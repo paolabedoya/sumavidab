@@ -6,6 +6,7 @@ import GroupRouter from './group/group.router'
 import LifestyleRouter from './lifestyle/lifestyle.router'
 import CountryRouter from './country/country.router'
 import RecipeRouter from './recipe/recipe.router'
+import ContactRouter from './contact/contact.router'
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use(GroupRouter)
 router.use(LifestyleRouter)
 router.use(CountryRouter)
 router.use(RecipeRouter)
+router.use(ContactRouter)
 
 export default router
