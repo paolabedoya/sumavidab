@@ -1,11 +1,12 @@
 import { Response } from 'express'
-import User from '../models/user'
+import User from './user.model'
 import type { Request, User as TUser } from '../utils/types'
+import UserService from './user.service' 
 
 const userController = {
     getUsers: async (_req: Request, res: Response) => {
         try {
-            const users = await User.find()
+            const users = await UserService.getAllUsers()
             res.send({
                 status: "success",
                 users: users
@@ -21,7 +22,7 @@ const userController = {
     getUser: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const user = await User.findById(id)
+            const user = await UserService.getUserById({ id })
             res.send({
                 status: "success",
                 user
@@ -35,26 +36,12 @@ const userController = {
     },
 
     createUser: async (req: Request<TUser>, res: Response) => {
-        const { rol, job_id, active, country_id, region, gender, group_id, lifestyle_id, events } = req.body
-
         try {
-            const newUser = new User({
-                rol,
-                job_id,
-                active,
-                country_id,
-                region,
-                gender,
-                group_id,
-                lifestyle_id,
-                events
-            })
-
-            const resultDocument = await newUser.save()
+            const user = await UserService.createUser({ ...req.body })
 
             res.send({
                 status: "success",
-                user: resultDocument
+                user
             })
         } catch(err) {
             return res.send({
@@ -69,7 +56,7 @@ const userController = {
         const { rol, job_id, active, country_id, region, gender, group_id, lifestyle_id, events } = req.body
 
         try {
-            const user = await User.findById(id)
+            const user = await UserService.updateUser({ ...req.body })
 
             if (!user) {
                 return res.send({
@@ -78,22 +65,9 @@ const userController = {
                 })
             }
 
-            user.rol = rol
-            user.job_id = job_id
-            user.active = active
-            user.country_id = country_id
-            user.region = region
-            user.gender = gender
-            user.group_id = group_id
-            user.lifestyle_id = lifestyle_id
-            user.events = events
-            user.updatedAt = new Date()
-
-            const resultDocument = await user.save()
-
             res.send({
                 status: "success",
-                user: resultDocument
+                user
             })
 
         } catch(err) {
@@ -110,7 +84,7 @@ const userController = {
 
         try {
 
-            const user = await User.findOneAndDelete({ _id: id })
+            const user = await UserService.deleteUser(id)
 
             if (!user) {
                 return res.send({

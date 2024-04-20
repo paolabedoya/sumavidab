@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { User as TUser } from '../utils/types'
 
-const userSchema = new Schema<TUser>({
+const UserSchema = new Schema<TUser>({
     rol: {
         type: String,
         required: true,
@@ -51,4 +51,4 @@ const userSchema = new Schema<TUser>({
     },
 })
 
-export default mongoose.model('User', userSchema)
+export default mongoose.model('User', UserSchema)

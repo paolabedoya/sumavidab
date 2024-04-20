@@ -9,7 +9,7 @@ import medicalHistoryRouter from './medical_history'
 import menuRecommendationRouter from './menu_recommendation'
 import recipeRouter from './recipe'
 import regionRouter from '../region/region.router'
-import userRouter from './user'
+import userRouter from '../user/user.router'
 
 const mainRouter = Router()
 
