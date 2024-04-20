@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { Recipe as TRecipe } from '../utils/types'
 
-const recipeSchema = new Schema<TRecipe>({
+const RecipeSchema = new Schema<TRecipe>({
     name: {
         type: String,
         required: true,
@@ -28,4 +28,4 @@ const recipeSchema = new Schema<TRecipe>({
     },
 })
 
-export default mongoose.model('Recipe', recipeSchema)
+export default mongoose.model('Recipe', RecipeSchema)

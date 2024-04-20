@@ -1,12 +1,13 @@
 import { Response } from 'express'
-import Recipe from '../models/recipe'
+import Recipe from './recipe.model'
 import type { Request } from '../utils/types'
 import type { Recipe as TRecipe } from '../utils/types'
+import RecipeService from './recipe.service'
 
-const recipeController = {
+const RecipeController = {
     getRecipes: async (_req: Request, res: Response) => {
         try {
-            const recipes = await Recipe.find()
+            const recipes = await RecipeService.getAllRecipes()
             res.send({
                 status: "success",
                 recipes: recipes
@@ -22,7 +23,7 @@ const recipeController = {
     getRecipe: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const recipe = await Recipe.findById(id)
+            const recipe = await RecipeService.getRecipeById(id)
             res.send({
                 status: "success",
                 recipe
@@ -39,18 +40,10 @@ const recipeController = {
         const { name, ingredients, steps, image_url } = req.body
 
         try {
-            const newRecipe = new Recipe({
-                name,
-                ingredients,
-                steps,
-                image_url 
-            })
-
-            const resultDocument = await newRecipe.save()
-
+            const recipe = await RecipeService.createRecipe({ name, ingredients, steps, image_url })
             res.send({
                 status: "success",
-                recipe: resultDocument
+                recipe
             })
         } catch(err) {
             return res.send({
@@ -62,10 +55,9 @@ const recipeController = {
 
     updateRecipe: async (req: Request<TRecipe, { id: string }>, res: Response) => {
         const { id } = req.params
-        const { name, ingredients, steps, image_url } = req.body
 
         try {
-            const recipe = await Recipe.findById(id)
+            const recipe = await RecipeService.updateRecipe({ _id: id, ...req.body })
 
             if (!recipe) {
                 return res.send({
@@ -74,17 +66,9 @@ const recipeController = {
                 })
             }
 
-            recipe.name = name
-            recipe.ingredients = ingredients
-            recipe.steps = steps
-            recipe.image_url = image_url
-            recipe.updatedAt = new Date()
-
-            const resultDocument = await recipe.save()
-
             res.send({
                 status: "success",
-                recipe: resultDocument
+                recipe
             })
 
         } catch(err) {
@@ -101,7 +85,7 @@ const recipeController = {
 
         try {
 
-            const recipe = await Recipe.findOneAndDelete({ _id: id })
+            const recipe = await RecipeService.deleteRecipe(id)
 
             if (!recipe) {
                 return res.send({
@@ -125,4 +109,4 @@ const recipeController = {
     },
 }
 
-export default recipeController
+export default RecipeController
