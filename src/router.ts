@@ -8,6 +8,8 @@ import CountryRouter from './country/country.router'
 import RecipeRouter from './recipe/recipe.router'
 import ContactRouter from './contact/contact.router'
 import UserRouter from './user/user.router'
+import MedicalHistoryRouter from './medicalHistory/medicalHistory.router'
+import EventRouter from './event/event.router'
 
 const router = Router()
 
@@ -20,5 +22,7 @@ router.use(CountryRouter)
 router.use(RecipeRouter)
 router.use(ContactRouter)
 router.use(UserRouter)
+router.use(MedicalHistoryRouter)
+router.use(EventRouter)
 
 export default router

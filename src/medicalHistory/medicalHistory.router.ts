@@ -3,10 +3,10 @@ import MedicalHistoryController from './medicalHistory.controller'
 
 const MedicalHistoryRouter = Router()
 
-MedicalHistoryRouter.get("/", MedicalHistoryController.getMedicalHistories)
-MedicalHistoryRouter.get("/:id", MedicalHistoryController.getMedicalHistory)
-MedicalHistoryRouter.post("/", MedicalHistoryController.createMedicalHistory)
-MedicalHistoryRouter.put("/:id", MedicalHistoryController.updateMedicalHistory)
-MedicalHistoryRouter.delete("/:id", MedicalHistoryController.deleteMedicalHistory)
+MedicalHistoryRouter.get("/history/", MedicalHistoryController.getMedicalHistories)
+MedicalHistoryRouter.get("/history/:id", MedicalHistoryController.getMedicalHistory)
+MedicalHistoryRouter.post("/history/", MedicalHistoryController.createMedicalHistory)
+MedicalHistoryRouter.put("/history/:id", MedicalHistoryController.updateMedicalHistory)
+MedicalHistoryRouter.delete("/history/:id", MedicalHistoryController.deleteMedicalHistory)
 
 export default MedicalHistoryRouter

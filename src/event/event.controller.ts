@@ -1,13 +1,13 @@
 import { Response } from 'express'
-import Event from '../models/event'
+import Event from './event.model'
 import type { Request } from '../utils/types'
 import type { Event as TEvent } from '../utils/types'
+import EventService from './event.service'
 
-
-const eventController = {
+const EventController = {
     getEvents: async (_req: Request, res: Response) => {
         try {
-            const events = await Event.find()
+            const events = await EventService.getAllEvents()
             res.send({
                 status: "success",
                 events
@@ -23,7 +23,7 @@ const eventController = {
     getEvent: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const event = await Event.findById(id)
+            const event = await EventService.getEventById(id)
             res.send({
                 status: "success",
                 event
@@ -37,22 +37,12 @@ const eventController = {
     },
 
     createEvent: async (req: Request<TEvent>, res: Response) => {
-        const { start_date, end_date, description, venue_type, worker_id } = req.body
-
         try {
-            const newEvent = new Event({
-                start_date,
-                end_date,
-                description,
-                venue_type,
-                worker_id 
-            })
-
-            const resultDocument = await newEvent.save()
+            const event = EventService.createEvent(req.body)
 
             res.send({
                 status: "success",
-                event: resultDocument
+                event
             })
         } catch(err) {
             return res.send({
@@ -63,12 +53,8 @@ const eventController = {
     },
 
     updateEvent: async (req: Request<TEvent, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { start_date, end_date, description, venue_type, worker_id } = req.body
-
         try {
-
-            const event = await Event.findById(id)
+            const event = await EventService.updateEvent({ _id: req.params.id, ...req.body })
 
             if (!event) {
                 return res.send({
@@ -77,18 +63,9 @@ const eventController = {
                 })
             }
 
-            event.start_date = start_date
-            event.end_date = end_date
-            event.description = description
-            event.venue_type = venue_type
-            event.worker_id = worker_id
-            event.updatedAt = new Date()
-
-            const resultDocument = await event.save()
-
             res.send({
                 status: "success",
-                event: resultDocument
+                event
             })
 
         } catch(err) {
@@ -105,7 +82,7 @@ const eventController = {
 
         try {
 
-            const event = await Event.findOneAndDelete({ _id: id })
+            const event = await EventService.deleteEvent(id)
 
             if (!event) {
                 return res.send({
@@ -129,4 +106,4 @@ const eventController = {
     },
 }
 
-export default eventController
+export default EventController
