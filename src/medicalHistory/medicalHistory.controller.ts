@@ -1,12 +1,13 @@
 import { Response } from 'express'
-import MedicalHistory from '../models/medical_history'
+import MedicalHistory from './medicalHistory.model'
 import type { Request } from '../utils/types'
 import type { MedicalHistory as TMedicalHistory } from '../utils/types'
+import MedicalHistoryService from './medicalHistory.service'
 
-const medicalHistoryController = {
+const MedicalHistoryController = {
     getMedicalHistories: async (_req: Request, res: Response) => {
         try {
-            const medicalHistories = await MedicalHistory.find()
+            const medicalHistories = await MedicalHistoryService.getAllMedicalHistories()
             res.send({
                 status: "success",
                 medicalHistories
@@ -22,7 +23,7 @@ const medicalHistoryController = {
     getMedicalHistory: async (req: Request<any, { id: string }>, res: Response) => {
         const { id } = req.params
         try {
-            const medicalHistory = await MedicalHistory.findById(id)
+            const medicalHistory = await MedicalHistoryService.getMedicalHistoryById(id)
             res.send({
                 status: "success",
                 medicalHistory
@@ -39,16 +40,10 @@ const medicalHistoryController = {
         const { patient_id, appointment_id } = req.body
 
         try {
-            const newMedicalHistory = new MedicalHistory({
-                patient_id,
-                appointment_id
-            })
-
-            const resultDocument = await newMedicalHistory.save()
-
+            const medicalHistory = MedicalHistoryService.createMedicalHistory({ patient_id, appointment_id})
             res.send({
                 status: "success",
-                medicalHistory: resultDocument
+                medicalHistory
             })
         } catch(err) {
             return res.send({
@@ -72,16 +67,10 @@ const medicalHistoryController = {
                     message: "No se ha encontrado el medicalHistory"
                 })
             }
-            
-            medicalHistory.patient_id = patient_id
-            medicalHistory.appointment_id = appointment_id
-            medicalHistory.updatedAt = new Date()
-
-            const resultDocument = await medicalHistory.save()
 
             res.send({
                 status: "success",
-                medicalHistory: resultDocument
+                medicalHistory
             })
 
         } catch(err) {
@@ -97,7 +86,7 @@ const medicalHistoryController = {
         const { id } = req.params
 
         try {
-            const medicalHistory = await MedicalHistory.findOneAndDelete({ _id: id })
+            const medicalHistory = await MedicalHistoryService.deleteMedicalHistory(id)
 
             if (!medicalHistory) {
                 return res.send({
@@ -121,4 +110,4 @@ const medicalHistoryController = {
     },
 }
 
-export default medicalHistoryController
+export default MedicalHistoryController

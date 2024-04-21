@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { MedicalHistory as TMedicalHistory } from '../utils/types'
 
-const medicalHistorySchema = new Schema<TMedicalHistory>({
+const MedicalHistorySchema = new Schema<TMedicalHistory>({
     patient_id: {
         type: String,
         required: true,
@@ -20,4 +20,4 @@ const medicalHistorySchema = new Schema<TMedicalHistory>({
     },
 })
 
-export default mongoose.model('MedicalHistory', medicalHistorySchema)
+export default mongoose.model('MedicalHistory', MedicalHistorySchema)
