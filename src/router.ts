@@ -10,6 +10,7 @@ import ContactRouter from './contact/contact.router'
 import UserRouter from './user/user.router'
 import MedicalHistoryRouter from './medicalHistory/medicalHistory.router'
 import EventRouter from './event/event.router'
+import MenuRecommendationRouter from './menuRecommendation/menuRecommendation.router'
 
 const router = Router()
 
@@ -24,5 +25,6 @@ router.use(ContactRouter)
 router.use(UserRouter)
 router.use(MedicalHistoryRouter)
 router.use(EventRouter)
+router.use(MenuRecommendationRouter)
 
 export default router

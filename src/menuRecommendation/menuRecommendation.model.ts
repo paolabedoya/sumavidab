@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import type { MenuRecommendation as TMenuRecommendation } from '../utils/types'
 
-const menuRecommendationSchema = new Schema<TMenuRecommendation>({
+const MenuRecommendationSchema = new Schema<TMenuRecommendation>({
     breakfast: {
         type: String,
         required: true,
@@ -40,4 +40,4 @@ const menuRecommendationSchema = new Schema<TMenuRecommendation>({
     },
 })
 
-export default mongoose.model('MenuRecommendations', menuRecommendationSchema)
+export default mongoose.model('MenuRecommendations', MenuRecommendationSchema)
