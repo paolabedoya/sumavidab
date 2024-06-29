@@ -1,113 +1,85 @@
-import { Response } from 'express'
-import type { Request } from '../utils/types'
-import Appointment from './appointment.model'
-import type { Appointment as TAppointment } from '../utils/types'
-import AppointmentService from './appointment.service'
+import { Response } from "express";
+import type { Request } from "../utils/types";
+import Appointment from "./appointment.model";
+import type { Appointment as TAppointment } from "../utils/types";
+import AppointmentService from "./appointment.service";
 
 const AppointmentController = {
-    getAppointments: async (_req: Request, res: Response) => {
-        try {
-            const appointments = await AppointmentService.getAllAppointments()
-            res.send({
-                status: "success",
-                appointments
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los appointments"
-            })
-        }
-    },
+  getAppointments: async (_req: Request, res: Response) => {
+    try {
+      const appointments = await AppointmentService.getAllAppointments();
+      return res.send(appointments);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    getAppointment: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const appointment = await AppointmentService.getAppointmentById(id)
-            res.send({
-                status: "success",
-                appointment
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el appointment"
-            })
-        }
-    },
+  getAppointment: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const appointment = await AppointmentService.getAppointmentById(id);
 
-    createAppointment: async (req: Request<TAppointment, any>, res: Response) => {
-        const { type, appointment_id } = req.body
+      if (!appointment) return res.status(404).send();
 
-        try {
-            const appointment = await AppointmentService.createAppointment({ type, appointment_id })
-            res.send({
-                status: "success",
-                appointment
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el appointment"
-            })
-        }
-    },
+      return res.send(appointment);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    updateAppointment: async (req: Request<TAppointment, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { type, appointment_id } = req.body
+  createAppointment: async (req: Request<TAppointment, any>, res: Response) => {
+    const { type, appointment_id } = req.body;
 
-        try {
+    try {
+      const appointment = await AppointmentService.createAppointment({
+        type,
+        appointment_id,
+      });
+      res.status(201).send(appointment);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            const appointment = await AppointmentService.updateAppointment({ _id: id, type, appointment_id})
+  updateAppointment: async (
+    req: Request<TAppointment, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
+    const { type, appointment_id } = req.body;
 
-            if (!appointment) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el appointment"
-                })
-            }
+    try {
+      const appointment = await AppointmentService.updateAppointment({
+        _id: id,
+        type,
+        appointment_id,
+      });
 
-            res.send({
-                status: "success",
-                appointment
-            })
+      if (!appointment) return res.status(404).send();
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el appointment"
-            })
-        }
+      return res.send(appointment);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    },
+  deleteAppointment: async (
+    req: Request<any, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
 
-    deleteAppointment: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+    try {
+      const appointment = await AppointmentService.deleteAppointment(id);
 
-        try {
+      if (!appointment) return res.status(404).send();
 
-            const appointment = await AppointmentService.deleteAppointment(id)
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-            if (!appointment) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el appointment"
-                })
-            }
-            return res.send({
-                status: "success",
-                appointment
-            })
+export default AppointmentController;
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el appointment"
-            })
-        }
-
-    },
-}
-
-export default AppointmentController
