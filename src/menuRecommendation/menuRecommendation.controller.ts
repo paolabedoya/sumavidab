@@ -1,119 +1,108 @@
-import { Response } from 'express'
-import type { Request } from '../utils/types'
-import type { MenuRecommendation as TMenuRecommendation } from '../utils/types'
-import MenuRecommendationService from './menuRecommendation.service'
+import { Response } from "express";
+import type { Request } from "../utils/types";
+import type { MenuRecommendation as TMenuRecommendation } from "../utils/types";
+import MenuRecommendationService from "./menuRecommendation.service";
 
 const MenuRecommendationController = {
-    getMenuRecommendations: async (_req: Request, res: Response) => {
-        try {
-            const recommendations = await MenuRecommendationService.getAllMenuRecommendations()
-            res.send({
-                status: "success",
-                recommendations
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los menuRecommendation"
-            })
-        }
-    },
+  getMenuRecommendations: async (_req: Request, res: Response) => {
+    try {
+      const recommendations =
+        await MenuRecommendationService.getAllMenuRecommendations();
 
-    getMenuRecommendation: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const recommendation = await MenuRecommendationService.getMenuRecommendationById(id)
-            res.send({
-                status: "success",
-                recommendation
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el menuRecommendation"
-            })
-        }
-    },
+      return res.send(recommendations);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createMenuRecommendation: async (req: Request<TMenuRecommendation>, res: Response) => {
-        const { breakfast, brunch, lunch, afternoon_snack, dinner, image_url, professional_id } = req.body
+  getMenuRecommendation: async (
+    req: Request<any, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
 
-        try {
-            const recommendation = await MenuRecommendationService.createMenuRecommendation({
-                breakfast,
-                brunch,
-                lunch,
-                afternoon_snack,
-                dinner,
-                image_url,
-                professional_id 
-            })
+    try {
+      const recommendation =
+        await MenuRecommendationService.getMenuRecommendationById(id);
 
-            res.send({
-                status: "success",
-                recommendation
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el menuRecommendation"
-            })
-        }
-    },
+      if (!recommendation) return res.status(404).send();
 
-    updateMenuRecommendation: async (req: Request<TMenuRecommendation, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
+      return res.send(recommendation);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            const recommendation = await MenuRecommendationService.updateMenuRecommendation({ _id: id, ...req.body})
+  createMenuRecommendation: async (
+    req: Request<TMenuRecommendation>,
+    res: Response,
+  ) => {
+    const {
+      breakfast,
+      brunch,
+      lunch,
+      afternoon_snack,
+      dinner,
+      image_url,
+      professional_id,
+    } = req.body;
 
-            if (!recommendation) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el menuRecommendation"
-                })
-            }
+    try {
+      const recommendation =
+        await MenuRecommendationService.createMenuRecommendation({
+          breakfast,
+          brunch,
+          lunch,
+          afternoon_snack,
+          dinner,
+          image_url,
+          professional_id,
+        });
 
-            res.send({
-                status: "success",
-                recommendation
-            })
+      return res.status(201).send(recommendation);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el menuRecommendation"
-            })
-        }
+  updateMenuRecommendation: async (
+    req: Request<TMenuRecommendation, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
 
-    },
+    try {
+      const recommendation =
+        await MenuRecommendationService.updateMenuRecommendation({
+          _id: id,
+          ...req.body,
+        });
 
-    deleteMenuRecommendation: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+      if (!recommendation) return res.status(404).send();
 
-        try {
-            const recommendation = await MenuRecommendationService.deleteMenuRecommendation(id)
+      return res.send(recommendation);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            if (!recommendation) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el menuRecommendation"
-                })
-            }
+  deleteMenuRecommendation: async (
+    req: Request<any, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
 
-            return res.send({
-                status: "success",
-                recommendation
-            })
+    try {
+      const recommendation =
+        await MenuRecommendationService.deleteMenuRecommendation(id);
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el menuRecommendation"
-            })
-        }
+      if (!recommendation) return res.status(404).send();
 
-    },
-}
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-export default MenuRecommendationController
+export default MenuRecommendationController;

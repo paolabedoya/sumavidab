@@ -1,109 +1,70 @@
-import { Response } from 'express'
-import JobService from './job.service'
-import type { Job as TJob } from '../utils/types'
-import type { Request } from '../utils/types'
+import { Response } from "express";
+import JobService from "./job.service";
+import type { Job as TJob } from "../utils/types";
+import type { Request } from "../utils/types";
 
 const JobController = {
-    getJobs: async (_req: Request, res: Response) => {
-        try {
-            const jobs = await JobService.getAllJobs()
-            res.send({
-                status: "success",
-                jobs
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los jobs"
-            })
-        }
-    },
+  getJobs: async (_req: Request, res: Response) => {
+    try {
+      const jobs = await JobService.getAllJobs();
 
-    getJob: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const job = JobService.getJobById(id)
-            res.send({
-                status: "success",
-                job
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el job"
-            })
-        }
-    },
+      return res.send(jobs);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createJob: async (req: Request<TJob>, res: Response) => {
-        const { name } = req.body
+  getJob: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const job = JobService.getJobById(id);
 
-        try {
-            const job = await JobService.createJob({ name })
-            res.send({
-                status: "success",
-                job
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el job"
-            })
-        }
-    },
+      return res.send(job);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    updateJob: async (req: Request<TJob, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name } = req.body
+  createJob: async (req: Request<TJob>, res: Response) => {
+    const { name } = req.body;
 
-        try {
-            const job = await JobService.updateJob({ id, name })
+    try {
+      const job = await JobService.createJob({ name });
 
-            if (!job) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el job"
-                })
-            }
+      return res.status(201).send(job);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            res.send({
-                status: "success",
-                job
-            })
+  updateJob: async (req: Request<TJob, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    const { name } = req.body;
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el job"
-            })
-        }
+    try {
+      const job = await JobService.updateJob({ id, name });
 
-    },
+      if (!job) return res.status(404).send();
 
-    deleteJob: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+      return res.send(job);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        try {
-            const job = await JobService.deleteJob(id)
-            if (!job) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el job"
-                })
-            }
+  deleteJob: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-            return res.send({
-                status: "success",
-                job
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el job"
-            })
-        }
+    try {
+      const job = await JobService.deleteJob(id);
 
-    },
-}
+      if (!job) return res.status(404).send();
 
-export default JobController
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
+
+export default JobController;

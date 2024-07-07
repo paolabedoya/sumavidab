@@ -1,113 +1,75 @@
-import { Response } from 'express'
-import type { Request } from '../utils/types'
-import type { Country as TCountry } from '../utils/types'
-import CountryService from './country.service'
+import { Response } from "express";
+import type { Request } from "../utils/types";
+import type { Country as TCountry } from "../utils/types";
+import CountryService from "./country.service";
 
 const CountryController = {
-    getCountries: async (_req: Request, res: Response) => {
-        try {
-            const countries = await CountryService.getAllCountries()
-            res.send({
-                status: "success",
-                countries
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los countries"
-            })
-        }
-    },
+  getCountries: async (_req: Request, res: Response) => {
+    try {
+      const countries = await CountryService.getAllCountries();
 
-    getCountry: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const country = await CountryService.getCountryById(id)
-            res.send({
-                status: "success",
-                country
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el country"
-            })
-        }
-    },
+      return res.send(countries);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createCountry: async (req: Request<TCountry>, res: Response) => {
-        const { name } = req.body
+  getCountry: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const country = await CountryService.getCountryById(id);
 
-        try {
-            const country = await CountryService.createCountry({ name })
+      if (!country) return res.status(404).send();
 
-            res.send({
-                status: "success",
-                country
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el country"
-            })
-        }
-    },
+      return res.send(country);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    updateCountry: async (req: Request<TCountry, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name } = req.body
+  createCountry: async (req: Request<TCountry>, res: Response) => {
+    const { name } = req.body;
 
-        try {
+    try {
+      const country = await CountryService.createCountry({ name });
 
-            const country = await CountryService.updateCountry({ id, name })
+      return res.status(201).send(country);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            if (!country) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el country"
-                })
-            }
+  updateCountry: async (
+    req: Request<TCountry, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
+    const { name } = req.body;
 
-            res.send({
-                status: "success",
-                country
-            })
+    try {
+      const country = await CountryService.updateCountry({ id, name });
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el country"
-            })
-        }
+      if (!country) return res.status(404).send();
 
-    },
+      return res.send(country);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    deleteCountry: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+  deleteCountry: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-        try {
-            const country = await CountryService.deleteCountry(id)
+    try {
+      const country = await CountryService.deleteCountry(id);
 
-            if (!country) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el country"
-                })
-            }
+      if (!country) return res.status(404).send();
 
-            return res.send({
-                status: "success",
-                country
-            })
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el country"
-            })
-        }
-
-    },
-}
-
-export default CountryController
+export default CountryController;

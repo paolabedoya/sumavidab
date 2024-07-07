@@ -82,4 +82,3 @@ const AppointmentController = {
 };
 
 export default AppointmentController;
-

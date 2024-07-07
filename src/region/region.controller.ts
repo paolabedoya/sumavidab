@@ -1,109 +1,81 @@
-import { Response } from 'express'
-import Region from './region.model'
-import type { Request } from '../utils/types'
-import type { Region as TRegion } from '../utils/types'
-import RegionService from './region.service'
+import { Response } from "express";
+import Region from "./region.model";
+import type { Request } from "../utils/types";
+import type { Region as TRegion } from "../utils/types";
+import RegionService from "./region.service";
 
 const RegionController = {
-    getRegions: async (_req: Request, res: Response) => {
-        try {
-            const regions = await RegionService.getAllRegions()
-            res.send({
-                status: "success",
-                regions
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los regions"
-            })
-        }
-    },
+  getRegions: async (_req: Request, res: Response) => {
+    try {
+      const regions = await RegionService.getAllRegions();
 
-    getRegion: async (req: Request<unknown, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const region = await RegionService.getRegionById({ id })
-            res.send({
-                status: "success",
-                region
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el region"
-            })
-        }
-    },
+      return res.send(regions);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createRegion: async (req: Request<TRegion>, res: Response) => {
-        const { name } = req.body
+  getRegion: async (req: Request<unknown, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-        try {
-            const newRegion = new Region({ name })
+    try {
+      const region = await RegionService.getRegionById({ id });
 
-            const resultDocument = await newRegion.save()
+      if (!region) return res.status(404).send();
 
-            res.send({
-                status: "success",
-                region: resultDocument
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el region"
-            })
-        }
-    },
+      return res.send(region);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    updateRegion: async (req: Request<TRegion, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name } = req.body
+  createRegion: async (req: Request<TRegion>, res: Response) => {
+    const { name } = req.body;
 
-        try {
-            const region = await RegionService.updateRegion({ id, name })
+    try {
+      const region = await RegionService.createRegion({ name });
 
-            if (!region) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el region"
-                })
-            }
-            res.send({
-                status: "success",
-                region
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el region"
-            })
-        }
-    },
+      return res.status(201).send(region);
+    } catch (err) {
+      return res.send({
+        status: "failed",
+        message: "No se ha podido crear el region",
+      });
+    }
+  },
 
-    deleteRegion: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+  updateRegion: async (
+    req: Request<TRegion, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
+    const { name } = req.body;
 
-        try {
-            const region = await RegionService.deleteRegion(id)
+    try {
+      const region = await RegionService.updateRegion({ id, name });
 
-            if (!region) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el region"
-                })
-            }
-            return res.send({
-                status: "success",
-                region
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el region"
-            })
-        }
-    },
-}
+      if (!region) return res.status(404).send();
 
-export default RegionController
+      return res.send(region);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+
+  deleteRegion: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+
+    try {
+      const region = await RegionService.deleteRegion(id);
+
+      if (!region) return res.status(404).send();
+
+      return res.status(204).send(region);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
+
+export default RegionController;
+
