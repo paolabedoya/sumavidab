@@ -40,7 +40,7 @@ const MedicalHistoryController = {
     const { patient_id, appointment_id } = req.body;
 
     try {
-      const medicalHistory = MedicalHistoryService.createMedicalHistory({
+      const medicalHistory = await MedicalHistoryService.createMedicalHistory({
         patient_id,
         appointment_id,
       });
