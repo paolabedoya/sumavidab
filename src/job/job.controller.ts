@@ -17,7 +17,9 @@ const JobController = {
   getJob: async (req: Request<any, { id: string }>, res: Response) => {
     const { id } = req.params;
     try {
-      const job = JobService.getJobById(id);
+      const job = await JobService.getJobById(id);
+
+      if (!job) return res.status(404).send();
 
       return res.send(job);
     } catch (err) {
@@ -42,7 +44,7 @@ const JobController = {
     const { name } = req.body;
 
     try {
-      const job = await JobService.updateJob({ id, name });
+      const job = await JobService.updateJob({ _id: id, name });
 
       if (!job) return res.status(404).send();
 
