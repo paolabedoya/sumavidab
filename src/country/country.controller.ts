@@ -47,7 +47,7 @@ const CountryController = {
     const { name } = req.body;
 
     try {
-      const country = await CountryService.updateCountry({ id, name });
+      const country = await CountryService.updateCountry({ _id: id, name });
 
       if (!country) return res.status(404).send();
 
