@@ -1,5 +1,4 @@
 import { Response } from "express";
-import Lifestyle from "./lifestyle.model";
 import type { Request } from "../utils/types";
 import type { Lifestyle as TLifestyle } from "../utils/types";
 import LifestyleService from "./lifestyle.service";
@@ -19,6 +18,8 @@ const LifestyleController = {
     const { id } = req.params;
     try {
       const lifestyle = await LifestyleService.getLifestyleById(id);
+
+      if (!lifestyle) return res.status(404).send();
 
       return res.send(lifestyle);
     } catch (err) {
@@ -46,7 +47,10 @@ const LifestyleController = {
     const { name } = req.body;
 
     try {
-      const lifestyle = await LifestyleService.updateLifestyle({ id, name });
+      const lifestyle = await LifestyleService.updateLifestyle({
+        _id: id,
+        name,
+      });
 
       if (!lifestyle) return res.status(404).send();
 
