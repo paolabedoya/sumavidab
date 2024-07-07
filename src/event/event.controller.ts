@@ -1,5 +1,4 @@
 import { Response } from "express";
-import Event from "./event.model";
 import type { Request } from "../utils/types";
 import type { Event as TEvent } from "../utils/types";
 import EventService from "./event.service";
@@ -30,7 +29,7 @@ const EventController = {
 
   createEvent: async (req: Request<TEvent>, res: Response) => {
     try {
-      const event = EventService.createEvent(req.body);
+      const event = await EventService.createEvent(req.body);
 
       return res.status(201).send(event);
     } catch (err) {
