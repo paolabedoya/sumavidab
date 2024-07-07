@@ -1,5 +1,4 @@
 import { Response } from "express";
-import Region from "./region.model";
 import type { Request } from "../utils/types";
 import type { Region as TRegion } from "../utils/types";
 import RegionService from "./region.service";
@@ -37,10 +36,7 @@ const RegionController = {
 
       return res.status(201).send(region);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido crear el region",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -52,7 +48,7 @@ const RegionController = {
     const { name } = req.body;
 
     try {
-      const region = await RegionService.updateRegion({ id, name });
+      const region = await RegionService.updateRegion({ _id: id, name });
 
       if (!region) return res.status(404).send();
 
@@ -78,4 +74,3 @@ const RegionController = {
 };
 
 export default RegionController;
-
