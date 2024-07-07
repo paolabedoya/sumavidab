@@ -1,6 +1,5 @@
 import { Response } from "express";
 import type { Request } from "../utils/types";
-import Appointment from "./appointment.model";
 import type { Appointment as TAppointment } from "../utils/types";
 import AppointmentService from "./appointment.service";
 
