@@ -40,7 +40,7 @@ const RecipeController = {
         image_url,
       });
 
-      return res.status(404).send(recipe);
+      return res.status(201).send(recipe);
     } catch (err) {
       return res.status(500).send();
     }
