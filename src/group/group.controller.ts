@@ -36,10 +36,7 @@ const GroupController = {
 
       return res.status(201).send(group);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido crear el group",
-      });
+      return res.status(500).send();
     }
   },
 
