@@ -1,113 +1,78 @@
-import { Response } from 'express'
-import Lifestyle from './lifestyle.model'
-import type { Request } from '../utils/types'
-import type { Lifestyle as TLifestyle } from '../utils/types'
-import LifestyleService from './lifestyle.service'
+import { Response } from "express";
+import type { Request } from "../utils/types";
+import type { Lifestyle as TLifestyle } from "../utils/types";
+import LifestyleService from "./lifestyle.service";
 
 const LifestyleController = {
-    getLifestyles: async (_req: Request, res: Response) => {
-        try {
-            const lifestyles = await LifestyleService.getAllLifestyles()
-            res.send({
-                status: "success",
-                lifestyles
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los lifestyle"
-            })
-        }
-    },
+  getLifestyles: async (_req: Request, res: Response) => {
+    try {
+      const lifestyles = await LifestyleService.getAllLifestyles();
 
-    getLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const lifestyle = await LifestyleService.getLifestyleById(id)
-            res.send({
-                status: "success",
-                lifestyle
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el lifestyle"
-            })
-        }
-    },
+      return res.send(lifestyles);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createLifestyle: async (req: Request<TLifestyle>, res: Response) => {
-        const { name } = req.body
+  getLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const lifestyle = await LifestyleService.getLifestyleById(id);
 
-        try {
-            const lifestyle = await LifestyleService.createLifestyle({ name })
-            res.send({
-                status: "success",
-                lifestyle
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el lifestyle"
-            })
-        }
-    },
+      if (!lifestyle) return res.status(404).send();
 
-    updateLifestyle: async (req: Request<TLifestyle, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name } = req.body
+      return res.send(lifestyle);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        try {
+  createLifestyle: async (req: Request<TLifestyle>, res: Response) => {
+    const { name } = req.body;
 
-            const lifestyle = await LifestyleService.updateLifestyle({ id, name })
+    try {
+      const lifestyle = await LifestyleService.createLifestyle({ name });
 
-            if (!lifestyle) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el lifestyle"
-                })
-            }
+      return res.status(201).send(lifestyle);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            res.send({
-                status: "success",
-                lifestyle
-            })
+  updateLifestyle: async (
+    req: Request<TLifestyle, { id: string }>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
+    const { name } = req.body;
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el lifestyle"
-            })
-        }
+    try {
+      const lifestyle = await LifestyleService.updateLifestyle({
+        _id: id,
+        name,
+      });
 
-    },
+      if (!lifestyle) return res.status(404).send();
 
-    deleteLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+      return res.send(lifestyle);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        try {
-            const lifestyle = await LifestyleService.deleteLifestyle(id)
+  deleteLifestyle: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-            if (!lifestyle) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el lifestyle"
-                })
-            }
+    try {
+      const lifestyle = await LifestyleService.deleteLifestyle(id);
 
-            return res.send({
-                status: "success",
-                lifestyle
-            })
+      if (!lifestyle) return res.status(404).send();
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el lifestyle"
-            })
-        }
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-    },
-}
-
-export default LifestyleController
+export default LifestyleController;

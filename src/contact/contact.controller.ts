@@ -1,22 +1,15 @@
 import { Response } from "express";
 import type { Request } from "../utils/types";
 import type { Contact as TContact } from "../utils/types";
-import Contact from "./contact.model";
 import ContactService from "./contact.service";
 
 const contactController = {
   getContacts: async (_req: Request, res: Response) => {
     try {
       const contacts = await ContactService.getAllContacts();
-      res.send({
-        status: "success",
-        contacts,
-      });
+      return res.send(contacts);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido obtener los contacts",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -24,15 +17,11 @@ const contactController = {
     const { id } = req.params;
     try {
       const contact = await ContactService.getContactById(id);
-      res.send({
-        status: "success",
-        contact,
-      });
+      if (!contact) return res.status(404).send();
+
+      return res.send(contact);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido obtener el contact",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -40,15 +29,9 @@ const contactController = {
     try {
       const contact = await ContactService.createContact({ ...req.body });
 
-      res.send({
-        status: "success",
-        contact,
-      });
+      return res.status(201).send(contact);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido crear el contact",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -63,21 +46,12 @@ const contactController = {
       });
 
       if (!contact) {
-        return res.send({
-          status: "failed",
-          message: "No se ha encontrado el contact",
-        });
+        return res.status(404).send();
       }
 
-      res.send({
-        status: "success",
-        contact,
-      });
+      return res.send(contact);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido actualizar el contact",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -85,22 +59,11 @@ const contactController = {
     try {
       const contact = await ContactService.deleteContact(req.params.id);
 
-      if (!contact) {
-        return res.send({
-          status: "failed",
-          message: "No se ha encontrado el contact",
-        });
-      }
+      if (!contact) return res.status(404).send();
 
-      return res.send({
-        status: "success",
-        contact,
-      });
+      return res.status(204).send();
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido eliminar el contact",
-      });
+      return res.status(500).send();
     }
   },
 };

@@ -1,109 +1,70 @@
-import { Response } from 'express'
-import Event from './event.model'
-import type { Request } from '../utils/types'
-import type { Event as TEvent } from '../utils/types'
-import EventService from './event.service'
+import { Response } from "express";
+import type { Request } from "../utils/types";
+import type { Event as TEvent } from "../utils/types";
+import EventService from "./event.service";
 
 const EventController = {
-    getEvents: async (_req: Request, res: Response) => {
-        try {
-            const events = await EventService.getAllEvents()
-            res.send({
-                status: "success",
-                events
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los events"
-            })
-        }
-    },
+  getEvents: async (_req: Request, res: Response) => {
+    try {
+      const events = await EventService.getAllEvents();
 
-    getEvent: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const event = await EventService.getEventById(id)
-            res.send({
-                status: "success",
-                event
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el event"
-            })
-        }
-    },
+      return res.send(events);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createEvent: async (req: Request<TEvent>, res: Response) => {
-        try {
-            const event = EventService.createEvent(req.body)
+  getEvent: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const event = await EventService.getEventById(id);
 
-            res.send({
-                status: "success",
-                event
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el event"
-            })
-        }
-    },
+      if (!event) return res.status(404).send();
 
-    updateEvent: async (req: Request<TEvent, { id: string }>, res: Response) => {
-        try {
-            const event = await EventService.updateEvent({ _id: req.params.id, ...req.body })
+      return res.send(event);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            if (!event) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el event"
-                })
-            }
+  createEvent: async (req: Request<TEvent>, res: Response) => {
+    try {
+      const event = await EventService.createEvent(req.body);
 
-            res.send({
-                status: "success",
-                event
-            })
+      return res.status(201).send(event);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el event"
-            })
-        }
+  updateEvent: async (req: Request<TEvent, { id: string }>, res: Response) => {
+    try {
+      const event = await EventService.updateEvent({
+        _id: req.params.id,
+        ...req.body,
+      });
 
-    },
+      if (!event) return res.status(404).send();
 
-    deleteEvent: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+      return res.send(event);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        try {
+  deleteEvent: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-            const event = await EventService.deleteEvent(id)
+    try {
+      const event = await EventService.deleteEvent(id);
 
-            if (!event) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el event"
-                })
-            }
+      if (!event) return res.status(404).send();
 
-            return res.send({
-                status: "success",
-                event
-            })
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el event"
-            })
-        }
-
-    },
-}
-
-export default EventController
+export default EventController;

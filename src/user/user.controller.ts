@@ -7,15 +7,10 @@ const userController = {
   getUsers: async (_req: Request, res: Response) => {
     try {
       const users = await UserService.getAllUsers();
-      res.send({
-        status: "success",
-        users: users,
-      });
+
+      return res.send(users);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido obtener los usuarios",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -23,15 +18,12 @@ const userController = {
     const { id } = req.params;
     try {
       const user = await UserService.getUserById({ id });
-      res.send({
-        status: "success",
-        user,
-      });
+
+      if (!user) return res.status(404).send();
+
+      return res.send(user);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido obtener el usuario",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -39,51 +31,23 @@ const userController = {
     try {
       const user = await UserService.createUser({ ...req.body });
 
-      res.send({
-        status: "success",
-        user,
-      });
+      return res.status(201).send(user);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido crear el usuario",
-      });
+      return res.status(500).send();
     }
   },
 
   updateUser: async (req: Request<TUser, { id: string }>, res: Response) => {
-    const { id } = req.params;
-    const {
-      rol,
-      job_id,
-      active,
-      country_id,
-      region,
-      gender,
-      group_id,
-      lifestyle_id,
-      events,
-    } = req.body;
+    const { id: _id } = req.params;
 
     try {
-      const user = await UserService.updateUser({ ...req.body });
+      const user = await UserService.updateUser({ _id, ...req.body });
 
-      if (!user) {
-        return res.send({
-          status: "failed",
-          message: "No se ha encontrado el usuario",
-        });
-      }
+      if (!user) return res.status(404).send();
 
-      res.send({
-        status: "success",
-        user,
-      });
+      return res.send(user);
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido actualizar el usuario",
-      });
+      return res.status(500).send();
     }
   },
 
@@ -93,26 +57,13 @@ const userController = {
     try {
       const user = await UserService.deleteUser(id);
 
-      if (!user) {
-        return res.send({
-          status: "failed",
-          message: "No se ha encontrado el usuario",
-        });
-      }
+      if (!user) return res.status(404).send();
 
-      return res.send({
-        status: "success",
-        user,
-      });
+      return res.status(204).send();
     } catch (err) {
-      return res.send({
-        status: "failed",
-        message: "No se ha podido eliminar el usuario",
-      });
+      return res.status(500).send();
     }
   },
-
-  login: async (req: Request, res: Response) => {},
 };
 
 export default userController;

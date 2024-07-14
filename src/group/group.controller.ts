@@ -1,113 +1,73 @@
-import { Response } from 'express'
-import Group from './group.model'
-import type { Request } from '../utils/types'
-import type { Group as TGroup } from '../utils/types'
-import GroupService from './group.service'
+import { Response } from "express";
+import Group from "./group.model";
+import type { Request } from "../utils/types";
+import type { Group as TGroup } from "../utils/types";
+import GroupService from "./group.service";
 
 const GroupController = {
-    getGroups: async (_req: Request, res: Response) => {
-        try {
-            const groups = await GroupService.getAllGroups()
-            res.send({
-                status: "success",
-                groups
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener los groups"
-            })
-        }
-    },
+  getGroups: async (_req: Request, res: Response) => {
+    try {
+      const groups = await GroupService.getAllGroups();
 
-    getGroup: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
-        try {
-            const group = await GroupService.getGroupById({ _id: id })
-            res.send({
-                status: "success",
-                group
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido obtener el group"
-            })
-        }
-    },
+      return res.send(groups);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-    createGroup: async (req: Request<TGroup>, res: Response) => {
-        const { name } = req.body
+  getGroup: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    try {
+      const group = await GroupService.getGroupById({ _id: id });
 
-        try {
-            const group = await GroupService.createGroup({ name })
-            res.send({
-                status: "success",
-                group
-            })
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido crear el group"
-            })
-        }
-    },
+      if (!group) return res.status(404).send();
 
-    updateGroup: async (req: Request<TGroup, { id: string }>, res: Response) => {
-        const { id } = req.params
-        const { name } = req.body
+      return res.send(group);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        try {
-            const group = await GroupService.updateGroup({ _id: id, name })
+  createGroup: async (req: Request<TGroup>, res: Response) => {
+    const { name } = req.body;
 
-            if (!group) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el group"
-                })
-            }
+    try {
+      const group = await GroupService.createGroup({ name });
 
-            res.send({
-                status: "success",
-                group
-            })
+      return res.status(201).send(group);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido actualizar el group"
-            })
-        }
+  updateGroup: async (req: Request<TGroup, { id: string }>, res: Response) => {
+    const { id } = req.params;
+    const { name } = req.body;
 
-    },
+    try {
+      const group = await GroupService.updateGroup({ _id: id, name });
 
-    deleteGroup: async (req: Request<any, { id: string }>, res: Response) => {
-        const { id } = req.params
+      if (!group) return res.status(404).send();
 
-        try {
+      return res.send(group);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 
-            const group = await GroupService.deleteGroup(id)
+  deleteGroup: async (req: Request<any, { id: string }>, res: Response) => {
+    const { id } = req.params;
 
-            if (!group) {
-                return res.send({
-                    status: "failed",
-                    message: "No se ha encontrado el group"
-                })
-            }
+    try {
+      const group = await GroupService.deleteGroup(id);
 
-            return res.send({
-                status: "success",
-                group
-            })
+      if (!group) return res.status(404).send();
 
-        } catch(err) {
-            return res.send({
-                status: "failed",
-                message: "No se ha podido eliminar el group"
-            })
-        }
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+};
 
-    },
-}
-
-export default GroupController
+export default GroupController;
