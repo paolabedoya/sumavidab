@@ -12,6 +12,7 @@ import MedicalHistoryRouter from "./medicalHistory/medicalHistory.router";
 import EventRouter from "./event/event.router";
 import MenuRecommendationRouter from "./menuRecommendation/menuRecommendation.router";
 import WebhookRouter from "./webhooks/webhooks.router";
+import { AuthRouter } from "./auth/auth.router";
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use(MedicalHistoryRouter);
 router.use(EventRouter);
 router.use(MenuRecommendationRouter);
 router.use(WebhookRouter);
+router.use(AuthRouter);
 
 export default router;

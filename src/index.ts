@@ -6,9 +6,7 @@ import morgan from "morgan";
 import router from "./router";
 import dotenv from "dotenv";
 
-if (process.env.NODE_ENV !== "production") {
-  dotenv.config();
-}
+dotenv.config();
 
 // crear aplicacion de express
 let app = express();
@@ -27,19 +25,19 @@ app.use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"));
 // anadir routers externos
 app.use("/api", router);
 
-mongoose
-  .connect(process.env.DB_URL ?? "")
-  .then(() => {
-    console.log("Mongo DB Connected");
-    app.listen(4040, () => {
-      console.log("=======================================");
-      console.log("=======================================");
-      console.log("Api corriendo en: http://localhost:4040");
-      console.log("=======================================");
-      console.log("=======================================");
-    });
-  })
-  .catch((e) => {
-    console.error("DB Connection error...");
-    console.error(e.toString());
-  });
+// mongoose
+//   .connect(process.env.DB_URL ?? "")
+//   .then(() => {
+//     console.log("Mongo DB Connected");
+app.listen(4040, () => {
+  console.log("=======================================");
+  console.log("=======================================");
+  console.log("Api corriendo en: http://localhost:4040");
+  console.log("=======================================");
+  console.log("=======================================");
+});
+// })
+// .catch((e) => {
+//   console.error("DB Connection error...");
+//   console.error(e.toString());
+// });

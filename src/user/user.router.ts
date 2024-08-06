@@ -11,6 +11,6 @@ UserRouter.put("/user/:id", UserController.updateUser);
 UserRouter.delete("/user/:id", UserController.deleteUser);
 
 // Authentication
-UserRouter.post("/user/login", UserController.login);
+// UserRouter.post("/user/login", UserController.login);
 
 export default UserRouter;
